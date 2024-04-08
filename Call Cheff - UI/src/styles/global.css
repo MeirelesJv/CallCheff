@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f9f9f9;
+  -webkit-font-smoothing: antialiesed;
+}
+
+body, input, textarea button{
+  font: 400 1rem Poppins;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
