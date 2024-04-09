@@ -1,33 +1,22 @@
 import React from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
-import { DotButton, useDotButton } from './EmblaCarouselDotButton'
-import {
-  PrevButton,
-  NextButton,
-  usePrevNextButtons
-} from './EmblaCarouselArrowButtons'
+
 import useEmblaCarousel from 'embla-carousel-react'
 import './carousel.css'
+import Autoplay from 'embla-carousel-autoplay'
+import Button from '../button'
 
 type PropType = {
   slides: string[]
   options?: EmblaOptionsType
+  
 }
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { slides, options } = props
-  const [emblaRef, emblaApi] = useEmblaCarousel(options)
-
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi)
-
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick
-  } = usePrevNextButtons(emblaApi)
-
+  const [emblaRef, emblaApi] = useEmblaCarousel(options, [
+    Autoplay({ playOnInit: true, delay: 5000 })
+  ])
   return (
     <section className="embla">
       <div className="embla__viewport" ref={emblaRef}>
@@ -35,30 +24,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         {slides.map((src,index) => (
             <div className="embla__slide bg-white" key={index}>
               <img className='embla__item' key={index} src={src} alt="" />
-              <div className='embla__item text-dark font-semibold'>Japonedse</div>
+              <div className='embla__item text-dark font-semibold'>Descrição</div>
+              
             </div>
           ))}
         </div>
       </div>
 
-      <div className="embla__controls">
-        <div className="embla__buttons">
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-          <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-        </div>
-
-        <div className="embla__dots">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              className={'embla__dot'.concat(
-                index === selectedIndex ? ' embla__dot--selected' : ''
-              )}
-            />
-          ))}
-        </div>
-      </div>
     </section>
   )
 }
