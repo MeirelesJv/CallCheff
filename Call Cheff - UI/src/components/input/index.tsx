@@ -13,4 +13,4 @@ function InputSearch({placeholder, type, name, id}:InputSearchProps){
   )
 }
 
-export default InputSearch;
+export default InputSearch

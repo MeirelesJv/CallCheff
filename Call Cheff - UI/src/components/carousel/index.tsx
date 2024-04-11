@@ -4,7 +4,6 @@ import { EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import './carousel.css'
 import Autoplay from 'embla-carousel-autoplay'
-import Button from '../button'
 
 type PropType = {
   slides: string[]
