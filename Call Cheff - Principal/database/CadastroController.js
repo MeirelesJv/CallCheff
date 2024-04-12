@@ -3,9 +3,14 @@ const router = express.Router();
 const users = require("./Users");
 const bcrypt = require('bcryptjs');
 const enviarEmail = require('../email')
+const session = require("express-session");
 
-router.get("/",(req,res) =>{
+router.get("/cadastro",(req,res) =>{
     res.render("cadastro");
+})
+
+router.get("/",(req,res) => {
+    res.render("login");
 })
 
 router.post("/users/create",(req,res) =>{
@@ -36,5 +41,26 @@ router.post("/users/create",(req,res) =>{
         }
     })
 })
+
+router.post("/users/login", (req,res) =>{
+    var email = req.body.email;
+    var password = req.body.password;
+    users.findOne({where:{Email: email}}).then( user => {
+        if(user != undefined){
+            var correct = bcrypt.compareSync(password, user.Password);
+            if(correct){
+                req.session.user = {
+                    id: user.id,
+                    email: user.Email
+                }
+                res.json(req.session.user);
+            }else{
+                res.redirect("/");
+            }
+        }else{
+            res.redirect("/")
+        }
+    })
+});
 
 module.exports = router;
