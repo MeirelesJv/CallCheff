@@ -9,8 +9,15 @@ const Users = connection.define('Users',{
     Password:{
         type: sequelize.STRING,
         allowNull: false
+    },
+    Name:{
+        type: sequelize.STRING,
+        allowNull: true,
+        defaultValue: null
     }
+    
 })
+
 
 Users.sync({force: false}).then(()=>{});
 module.exports = Users;
