@@ -14,8 +14,7 @@ router.get("/",(req,res) => {
 })
 
 router.post("/users/create",(req,res) =>{
-    var email = req.body.email;
-    var password = req.body.password;
+    var {email, password} = req.body;
        
     //Primeiro verificamos se o email já é cadastrado
     users.findOne({where:{Email: email}}).then( user => {
