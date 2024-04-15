@@ -6,11 +6,11 @@ import { ErrorPage } from "./pages/ErrorPage";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RegisterPage />
+    element: <HomePage /> ,
   },
   {
-    path: "/resgiter",
+    path: "register/",
     element: <RegisterPage />,
-    errorElement: <ErrorPage />
+    errorElement: <ErrorPage />,
   },
-])
+]);
