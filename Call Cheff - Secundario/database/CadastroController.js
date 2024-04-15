@@ -11,27 +11,26 @@ router.get("/",(req,res) =>{
 router.post("/users/create",(req,res) =>{
     var email = req.body.email;
     var password = req.body.password;
+    var name = req.body.name;
 
+    // Verifica se name está vazio e define como null se for o caso
+    if (name.trim() === '') {
+        name = null;
+    }
                             
-            var salt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(password, salt);
-            users.create({
-                Email: email,
-                Password: hash
-            }).then(() => {
-                enviarEmail.sendMail({
-                    from: "Joao Vitor <meirelesDev@hotmail.com>",
-                    to: email,
-                    subject: "Cadastro CallCheff",
-                    text:"Obrigado pelo cadastro seu otario",
-                });
-                res.redirect('/')
-            }).catch((err) => {
-                res.redirect('/cadastro')
-            });
-        
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(password, salt);
     
-})
+    users.create({
+        Email: email,
+        Password: hash,
+        Name: name
+    }).then(() => {
+        res.redirect('/')
+    }).catch((err) => {
+        res.redirect('/cadastro')
+    });
+});
 
 
 module.exports = router;
