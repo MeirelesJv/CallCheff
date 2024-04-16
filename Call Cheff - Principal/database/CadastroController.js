@@ -13,18 +13,12 @@ router.get("/",(req,res) => {
     res.render("login");
 })
 
-<<<<<<< HEAD
-router.post("/users/create",(req,res) =>{
-    var {email, password} = req.body;
-       
-=======
 router.get("/cadastro/dados",(req,res) =>{
     res.render("cadastroCont");
 })
 
 router.post("/users/create/email",(req,res) => {
-    var email = req.body.email;
-    var password = req.body.password;
+    let {email, password} = req.body;
 
     users.findOne({where: {Email: email}}).then( emails => {
         if(emails == undefined){
@@ -38,36 +32,37 @@ router.post("/users/create/email",(req,res) => {
 })
 
 router.post("/users/create/dados",(req,res) =>{
-    let name = req.body.name;
-    let lastname = req.body.lastname;
-    let cpf = req.body.cpf;
-    let birthday = req.body.birthday;
-    let cep = req.body.cep;
-    let numberhouse = req.body.numberhouse;
-    let house = req.body.house;
-    let reference = req.body.reference == ''?null : req.body.reference;
-    let tel = req.body.tel;
-    let addres = req.body.addres;
+    let dados = {
+    name: req.body.name,
+    lastname: req.body.lastname,
+    cpf: req.body.cpf,
+    birthday: req.body.birthday,
+    cep: req.body.cep,
+    numberhouse: req.body.numberhouse,
+    house: req.body.house,
+    reference: req.body.reference == ''?null : req.body.reference,
+    tel: req.body.tel,
+    addres: req.body.addres
+    }
 
->>>>>>> aa760ddeac5ab80da0c53d8bd7b328705234a1c1
     //Primeiro verificamos se o email já é cadastrado
-    users.findOne({where:{Cpf: cpf}}).then( user => {
+    users.findOne({where:{Cpf: dados.cpf}}).then( user => {
         if(user == undefined){
             var salt = bcrypt.genSaltSync(10);
             var hash = bcrypt.hashSync(req.session.password, salt);
             users.create({
-                Name: name,
-                LastName: lastname,
                 Email: req.session.email,
                 Password: hash,
-                Cpf: cpf,
-                Birthday: birthday,
-                Cep: cep,
-                NumberHouse: numberhouse,
-                House: house,  
-                Reference: reference,
-                Tel: tel,
-                Addres: addres,
+                Name: dados.name,
+                LastName: dados.lastname,
+                Cpf: dados.cpf,
+                Birthday: dados.birthday,
+                Cep: dados.cep,
+                NumberHouse: dados.numberhouse,
+                House: dados.house,  
+                Reference: dados.reference,
+                Tel: dados.tel,
+                Addres: dados.addres,
             }).then(() => {
                 enviarEmail.sendMail({
                     from: "Joao Vitor <meirelesDev@hotmail.com>",
@@ -86,8 +81,8 @@ router.post("/users/create/dados",(req,res) =>{
 })
 
 router.post("/users/login", (req,res) =>{
-    var email = req.body.email;
-    var password = req.body.password;
+    let {email, password} = req.body;
+    
     users.findOne({where:{Email: email}}).then( user => {
         if(user != undefined){
             var correct = bcrypt.compareSync(password, user.Password);
