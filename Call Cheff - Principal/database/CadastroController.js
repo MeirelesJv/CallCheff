@@ -33,20 +33,16 @@ router.post("/users/create/email",(req,res) => {
 })
 
 router.post("/users/create/dados",(req,res) =>{
-    var name = req.body.name;
-    var lastname = req.body.lastname;
-    var cpf = req.body.cpf;
-    var birthday = req.body.birthday;
-    var cep = req.body.cep;
-    var numberhouse = req.body.numberhouse;
-    var house = req.body.house;
-    var addres = req.body.addres;
-    var reference = req.body.reference;
-    var tel = req.body.tel;
-
-    if (reference.trim() === '') {
-        reference = null;
-    }
+    let name = req.body.name;
+    let lastname = req.body.lastname;
+    let cpf = req.body.cpf;
+    let birthday = req.body.birthday;
+    let cep = req.body.cep;
+    let numberhouse = req.body.numberhouse;
+    let house = req.body.house;
+    let reference = req.body.reference == ''?null : req.body.reference;
+    let tel = req.body.tel;
+    let addres = req.body.addres;
 
     //Primeiro verificamos se o email já é cadastrado
     users.findOne({where:{Cpf: cpf}}).then( user => {
@@ -55,17 +51,17 @@ router.post("/users/create/dados",(req,res) =>{
             var hash = bcrypt.hashSync(req.session.password, salt);
             users.create({
                 Name: name,
+                LastName: lastname,
                 Email: req.session.email,
                 Password: hash,
                 Cpf: cpf,
-                LastName: lastname,
-                Tel: tel,
-                Reference: reference,
-                Addres: addres,
-                House: house, 
-                NumberHouse: numberhouse, 
-                Cep: cep,
                 Birthday: birthday,
+                Cep: cep,
+                NumberHouse: numberhouse,
+                House: house,  
+                Reference: reference,
+                Tel: tel,
+                Addres: addres,
             }).then(() => {
                 enviarEmail.sendMail({
                     from: "Joao Vitor <meirelesDev@hotmail.com>",

@@ -38,19 +38,21 @@ const Users = connection.define('Users',{
         type: sequelize.STRING,
         allowNull: false
     },
-    Address:{
-        type: sequelize.STRING,
-        allowNull: false
-    },
     Reference:{
         type: sequelize.STRING,
         allowNull: true,
         defaultValue: null
     },
     Tel:{
-        type: sequelize.INTEGER,
+        type: sequelize.BIGINT(11),
+        allowNull: false
+
+    },
+    Addres:{
+        type: sequelize.STRING,
         allowNull: false
     },
+    
 })
 
 Users.sync({force: false}).then(()=>{});
