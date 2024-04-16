@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Logo from '../../assets/svg/Logo.svg'
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
   return (
@@ -12,7 +13,7 @@ const NavBar = () => {
         </h1>
       </div>
       <div className='flex gap-4 items-center sm:visible invisible'>
-        <a className='font-semibold text-dark-orange' href="">Criar Conta</a>
+        <Link className='font-semibold text-dark-orange' to={'cadastro/'}>Criar Conta</Link>
         <button className='py-2 px-6  rounded-full bg-dark-orange text-light-grey font-semibold'>
           Entrar
         </button>
