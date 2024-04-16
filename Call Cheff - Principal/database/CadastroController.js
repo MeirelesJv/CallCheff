@@ -13,6 +13,11 @@ router.get("/",(req,res) => {
     res.render("login");
 })
 
+<<<<<<< HEAD
+router.post("/users/create",(req,res) =>{
+    var {email, password} = req.body;
+       
+=======
 router.get("/cadastro/dados",(req,res) =>{
     res.render("cadastroCont");
 })
@@ -44,6 +49,7 @@ router.post("/users/create/dados",(req,res) =>{
     let tel = req.body.tel;
     let addres = req.body.addres;
 
+>>>>>>> aa760ddeac5ab80da0c53d8bd7b328705234a1c1
     //Primeiro verificamos se o email já é cadastrado
     users.findOne({where:{Cpf: cpf}}).then( user => {
         if(user == undefined){

@@ -13,6 +13,7 @@ Site criado utilizando Node.js
 <li>Slugify => Transforma uma String normal em uma Slug.</li>
 <li>Bcryptjs => Armazena senhas de forma segura.</li>
 <li>Nodemailer => Permite envio de E-mail com facilidade </li>
+<li>Cors => Permite o gerenciamento de urls acessíveis a API.</li>
 </ul>
 
 <h3>FrameWorks Usados:</h3>
