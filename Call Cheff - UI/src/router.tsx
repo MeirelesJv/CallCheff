@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { RegisterTeste } from "./pages/RegisterTeste";
 import { ErrorPage } from "./pages/ErrorPage";
 import { FormEmail } from "./components/register/FormEmail";
 import { FormDadosPessoais } from "./components/register/FormDadosPessoais";
@@ -14,16 +15,5 @@ export const router = createBrowserRouter([
   {
     path: "cadastro/",
     element: <RegisterPage />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "1/",
-        element: <FormDadosPessoais />,
-      },
-      {
-        path: "2/",
-        element: <FormEndereco />,
-      }
-    ]
   }
 ]);
