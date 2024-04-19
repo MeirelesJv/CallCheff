@@ -13,7 +13,7 @@ const createUserFormAdressInfoSchema = z.object({
   CEP: z.string().nonempty('O CEP é obrigatório.'),
   Número: z.string().nonempty('O numero é obrigatório.'),
   Complemento: z.string()
-    
+
 })
 
 type CreateUserData = z.infer<typeof createUserFormAdressInfoSchema>
@@ -27,7 +27,7 @@ export function FormEndereco() {
     return console.log(output)
   }
 
-  const createUserAdressInfoForm = useForm<CreateUserData>({ 
+  const createUserAdressInfoForm = useForm<CreateUserData>({
     resolver: zodResolver(createUserFormAdressInfoSchema)
   })
 
@@ -42,23 +42,29 @@ export function FormEndereco() {
           Endereço
         </Title.Description>
       </Title.TitleField>
+
       <form onSubmit={handleSubmit(createAdressInfoUser)} className="flex flex-col gap-6">
         <Form.Field >
           <span className="ml-6 ">CEP</span>
           <Form.Input type="text" name="CEP" placeholder="Insira seu CEP" />
+          <Form.ErrorMessage field="CEP" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Endereço</Form.Label>
-          <Form.Input type="text" name="Adress" placeholder="Insira seu endereço" />
+          <Form.Input type="text" name="Adress" placeholder="Insira seu endereço" />   
+          <Form.ErrorMessage field="Adress" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Número</Form.Label>
           <Form.Input type="number" name="Number" placeholder="Insira seu número" />
+          <Form.ErrorMessage field="Number" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Complemento</Form.Label>
           <Form.Input type="text" name="notes" placeholder="Insira um complemento" />
         </Form.Field>
+        <button type="submit" className='text-center mt-6 py-2 px-6 rounded-full bg-dark-orange text-light-grey font-semibold'>Criar Conta</button>
+
       </form>
     </FormProvider>
   )

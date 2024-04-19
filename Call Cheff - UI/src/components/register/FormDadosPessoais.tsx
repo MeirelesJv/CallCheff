@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Title } from "../title/index"
 import { useState } from "react"
 import { Form } from "../form/index"
+import { api } from "../../services"
 
 //Validação Formulário
 const createUserFormPersonalInfoSchema = z.object({
@@ -11,13 +12,17 @@ const createUserFormPersonalInfoSchema = z.object({
     .nonempty('O nome é obrigatório.'),
   LastName: z.string()
     .nonempty('O sobrenome é obrigatório.'),
-  Cpf: z.string().nonempty('O CPF é obrigatório.').refine((value) => /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/.test(value), {
-    message: "CPF inválido."
-  }),
-  CellPhone: z.string().nonempty('O CPF é obrigatório.').refine((value) => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/.test(value), {
+  Cpf: z.string().nonempty('O CPF é obrigatório.')
+  // .refine((value) => /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/.test(value), {
+  //   message: "CPF inválido."
+  // })
+  ,
+  CellPhone: z.string().nonempty('O CPF é obrigatório.')
+  .refine((value) => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/.test(value), {
     message: "Número de telefone inválido."
-  }),
-  DateBirth: z.date()
+  })
+  ,
+  DateBirth: z.string().transform((str) => new Date(str))
     .refine((date: Date) => {
       let today = new Date();
       let age = today.getFullYear() - date.getFullYear();
@@ -34,16 +39,33 @@ const createUserFormPersonalInfoSchema = z.object({
 
 type CreateUserData = z.infer<typeof createUserFormPersonalInfoSchema>
 
-export function FormDadosPessoais() {
+
+export function FormDadosPessoais({ changeStep /* Descobrir como arrumar a Tipagem */ }) {
 
   const [output, setOutput] = useState('')
 
   async function createPersonalInfoUser(data: CreateUserData) {
-    setOutput(JSON.stringify(data, null, 2))
-    return console.log(output)
+    console.log(data.Cpf)
+    const obj= {
+      name: data.Name,
+      lastname: data.LastName,
+      cpf: data.Cpf,
+      birthday: data.DateBirth,
+      cep: "12345646",
+      numberhouse: "2",
+      house: "",
+      reference: null,
+      tel: data.CellPhone,
+      addres: "req.body.addres"
+      }
+
+    const axiosConfig= {headers:{'content-type':'application/json'}}
+    api.post('/users/create/dados', { obj },axiosConfig)
+    return console.log("Enviou")
   }
 
-  const createUserPersonalInfoForm = useForm<CreateUserData>({ 
+  
+  const createUserPersonalInfoForm = useForm<CreateUserData>({
     resolver: zodResolver(createUserFormPersonalInfoSchema)
   })
 
@@ -54,7 +76,7 @@ export function FormDadosPessoais() {
   return (
 
     <FormProvider  {...createUserPersonalInfoForm}>
-        <Title.TitleField>
+      <Title.TitleField>
         <Title.Description>
           Dados Pessoais
         </Title.Description>
@@ -62,25 +84,30 @@ export function FormDadosPessoais() {
       <form onSubmit={handleSubmit(createPersonalInfoUser)} className="flex flex-col gap-6">
         <Form.Field >
           <span className="ml-6 ">Nome</span>
-          <Form.Input type="text" name="name" placeholder="Insira seu nome" />
+          <Form.Input type="text" name="Name" placeholder="Insira seu nome" />
+          <Form.ErrorMessage field="Name" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Sobrenome</Form.Label>
-         
           <Form.Input type="text" name="LastName" placeholder="Insira seu sobrenome" />
+          <Form.ErrorMessage field="LastName" />
         </Form.Field>
         <Form.Field >
           <Form.Label>CPF</Form.Label>
           <Form.Input type="text" name="Cpf" placeholder="Insira seu CPF" />
+          <Form.ErrorMessage field="Cpf" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Data de Nascimento</Form.Label>
           <Form.Input type="date" name="DateBirth" />
+          <Form.ErrorMessage field="DateBirth" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Telefone</Form.Label>
           <Form.Input type="number" name="CellPhone" placeholder="Insira seu telefone/celular" />
+          <Form.ErrorMessage field="CellPhone" />
         </Form.Field>
+        <button type="submit" className='text-center mt-6 py-2 px-6 rounded-full bg-dark-orange text-light-grey font-semibold'>Criar Conta</button>
       </form>
     </FormProvider>
   )
