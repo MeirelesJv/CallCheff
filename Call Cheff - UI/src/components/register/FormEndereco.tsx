@@ -4,27 +4,34 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Title } from "../title/index"
 import { useState } from "react"
 import { Form } from "../form/index"
-
+import { api } from "../../services"
 
 //Validação Formulário
 const createUserFormAdressInfoSchema = z.object({
-  Endereço: z.string()
-    .nonempty('Insira o endereço.'),
+  Adress: z.string().nonempty('Insira o endereço.'),
   CEP: z.string().nonempty('O CEP é obrigatório.'),
-  Número: z.string().nonempty('O numero é obrigatório.'),
-  Complemento: z.string()
-
+  Number: z.string().nonempty('O numero é obrigatório.'),
+  Notes: z.string(),
+  Locale: z.enum(["Casa", "Apartamento"])
 })
 
 type CreateUserData = z.infer<typeof createUserFormAdressInfoSchema>
 
 export function FormEndereco() {
 
-  const [output, setOutput] = useState('')
 
   async function createAdressInfoUser(data: CreateUserData) {
-    setOutput(JSON.stringify(data, null, 2))
-    return console.log(output)
+    const obj = {
+      cep: data.CEP,
+      numberhouse: data.Number,
+      house: "",
+      addres: data.Adress,
+      reference: data.Notes,
+    }
+
+    const axiosConfig = { headers: { 'content-type': 'application/json' } }
+    api.post('/users/create/dados', { obj }, axiosConfig)
+    return console.log("Enviou")
   }
 
   const createUserAdressInfoForm = useForm<CreateUserData>({
@@ -51,8 +58,14 @@ export function FormEndereco() {
         </Form.Field>
         <Form.Field >
           <Form.Label>Endereço</Form.Label>
-          <Form.Input type="text" name="Adress" placeholder="Insira seu endereço" />   
+          <Form.Input type="text" name="Adress" placeholder="Insira seu endereço" />
           <Form.ErrorMessage field="Adress" />
+        </Form.Field>
+        <Form.Field >
+          <Form.Label>Tipo do Local</Form.Label>
+          <Form.InputRadio name="Locale" option="Casa" />
+          <Form.InputRadio name="Locale" option="Apartamento" />
+          <Form.ErrorMessage field="CustomLocale" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Número</Form.Label>

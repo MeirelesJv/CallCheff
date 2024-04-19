@@ -5,7 +5,6 @@ import { UseMultipleForms } from "../components/register/useMultipleForms";
 import { useState } from "react";
 
 export function RegisterPage() {
-
   const [stepChildren,setStepChildren] = useState(0)
 
   function changeStep(value: number){

@@ -18,9 +18,9 @@ const createUserFormPersonalInfoSchema = z.object({
   // })
   ,
   CellPhone: z.string().nonempty('O CPF é obrigatório.')
-  .refine((value) => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/.test(value), {
-    message: "Número de telefone inválido."
-  })
+    .refine((value) => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/.test(value), {
+      message: "Número de telefone inválido."
+    })
   ,
   DateBirth: z.string().transform((str) => new Date(str))
     .refine((date: Date) => {
@@ -42,29 +42,22 @@ type CreateUserData = z.infer<typeof createUserFormPersonalInfoSchema>
 
 export function FormDadosPessoais({ changeStep /* Descobrir como arrumar a Tipagem */ }) {
 
-  const [output, setOutput] = useState('')
-
   async function createPersonalInfoUser(data: CreateUserData) {
-    console.log(data.Cpf)
-    const obj= {
-      name: data.Name,
-      lastname: data.LastName,
-      cpf: data.Cpf,
-      birthday: data.DateBirth,
-      cep: "12345646",
-      numberhouse: "2",
-      house: "",
-      reference: null,
-      tel: data.CellPhone,
-      addres: "req.body.addres"
-      }
-
-    const axiosConfig= {headers:{'content-type':'application/json'}}
-    api.post('/users/create/dados', { obj },axiosConfig)
-    return console.log("Enviou")
+    let name = data.Name
+    let lastname = data.LastName
+    let cpf = '03832591850'
+    let birthday = data.DateBirth
+    let tel = data.CellPhone
+    // let cep= '05136350'
+    // let numberhouse= '25'
+    // let house= 'Casa'
+    // let reference= 'Casa'
+    // let addres= 'Rua Tal'
+    const axiosConfig = { headers: { 'content-type': 'application/json' } }
+    await api.post('/users/create/dados', { name, lastname, cpf, birthday, tel }, axiosConfig)
+    return changeStep(2)
   }
 
-  
   const createUserPersonalInfoForm = useForm<CreateUserData>({
     resolver: zodResolver(createUserFormPersonalInfoSchema)
   })
@@ -74,7 +67,6 @@ export function FormDadosPessoais({ changeStep /* Descobrir como arrumar a Tipag
   } = createUserPersonalInfoForm;
 
   return (
-
     <FormProvider  {...createUserPersonalInfoForm}>
       <Title.TitleField>
         <Title.Description>

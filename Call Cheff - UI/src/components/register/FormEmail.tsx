@@ -26,15 +26,14 @@ type CreateUserData = z.infer<typeof createUserFormSchema>
 export function FormEmail({ changeStep /* Descobrir como arrumar a Tipagem */ }) {
   const createUserForm = useForm<CreateUserData>({ resolver: zodResolver(createUserFormSchema) })
   const { handleSubmit, } = createUserForm;
-  async function createUserEmailForm(data: CreateUserData) {
 
-    const email =  data.email
-    const password= data.password
-    const axiosConfig= {headers:{'content-type':'application/json'}}
-    api.post('/users/create/email', { email,password },axiosConfig)
+  async function createUserEmailForm(data: CreateUserData) {
+    const email = data.email
+    const password = data.password
+    const axiosConfig = { headers: { 'content-type': 'application/json' } }
+    api.post('/users/create/email', { email, password }, axiosConfig)
     return changeStep(1)
   }
-
 
   return (
     <FormProvider  {...createUserForm}>
