@@ -3,7 +3,6 @@ const router = express.Router();
 const users = require("./Users");
 const bcrypt = require('bcryptjs');
 const enviarEmail = require('../email')
-const session = require("express-session");
 
 router.get("/cadastro",(req,res) =>{
     res.render("cadastro");
@@ -13,71 +12,59 @@ router.get("/",(req,res) => {
     res.render("login");
 })
 
-router.get("/cadastro/dados",(req,res) =>{
-    res.render("cadastroCont");
-})
+router.post("/users/create/dados",async (req,res) =>{
+    let { email, password,name, lastname, cpf, birthday, cep, numberhouse, house, reference, tel, addres,} = req.body
 
-router.post("/users/create/email",(req,res) => {
-    let {email, password} = req.body;
-
-    users.findOne({where: {Email: email}}).then( emails => {
-        if(emails == undefined){
-            req.session.email = email;
-            req.session.password = password;
-            res.redirect("/cadastro/dados")
-        }else{
-            res.redirect("/")
-        }
-    })
-})
-
-router.post("/users/create/dados",(req,res) =>{
-    let dados = {
-    name: req.body.name,
-    lastname: req.body.lastname,
-    cpf: req.body.cpf,
-    birthday: req.body.birthday,
-    cep: req.body.cep,
-    numberhouse: req.body.numberhouse,
-    house: req.body.house,
-    reference: req.body.reference == ''?null : req.body.reference,
-    tel: req.body.tel,
-    addres: req.body.addres
+    //Verifica que se nao tiver nada em Reference, ele coloque com null.
+    if (reference.trim() === '') {
+        reference = null;
     }
 
-    //Primeiro verificamos se o email já é cadastrado
-    users.findOne({where:{Cpf: dados.cpf}}).then( user => {
-        if(user == undefined){
-            var salt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(req.session.password, salt);
-            users.create({
-                Email: req.session.email,
-                Password: hash,
-                Name: dados.name,
-                LastName: dados.lastname,
-                Cpf: dados.cpf,
-                Birthday: dados.birthday,
-                Cep: dados.cep,
-                NumberHouse: dados.numberhouse,
-                House: dados.house,  
-                Reference: dados.reference,
-                Tel: dados.tel,
-                Addres: dados.addres,
-            }).then(() => {
+    try {
+        //Verificação de Email
+        let existingEmail = await users.findOne({ where: {Email: email}});
+        if (existingEmail == undefined) {
+            //Verificação de CPF
+            let existingCpf = await users.findOne({where: {Cpf: cpf}});
+            if (existingCpf == undefined) {
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(password, salt);
+
+                await users.create({
+                    Email: email,
+                    Password: hash,
+                    Name: name,
+                    LastName: lastname,
+                    Cpf: cpf,
+                    Birthday: birthday,
+                    Cep: cep,
+                    NumberHouse: numberhouse,
+                    House: house,
+                    Reference: reference,
+                    Tel: tel,
+                    Addres: addres
+                });
+                
                 enviarEmail.sendMail({
                     from: "Joao Vitor <meirelesDev@hotmail.com>",
-                    to: req.session.email,
+                    to: email,
                     subject: "Cadastro CallCheff",
-                    text:"Obrigado pelo cadastro seu otario",
+                    text: "Obrigado pelo cadastro seu otario",
                 });
-                res.redirect('/')
-            }).catch((err) => {
-                res.redirect('/cadastro')
-            }); 
+
+                res.redirect('/'); //Sucesso
+            }else{
+             res.redirect("/") //Cpf ja cadastrado
+             console.log("Já existe o CPF")
+            }
         }else{
-            res.redirect("/")
+            res.redirect("/"); //Email ja cadastrado
+            console.log("Já existe o Email")
         }
-    })
+    }catch(error){
+        console.error("Erro:", error);
+        res.status(500).send("Erro interno do servidor");
+    }
 })
 
 router.post("/users/login", (req,res) =>{
