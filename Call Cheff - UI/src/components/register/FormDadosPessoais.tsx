@@ -6,6 +6,8 @@ import { useState } from "react"
 import { Form } from "../form/index"
 import { api } from "../../services"
 
+import Cookies from 'js-cookie'
+
 //Validação Formulário
 const createUserFormPersonalInfoSchema = z.object({
   Name: z.string()
@@ -43,18 +45,14 @@ type CreateUserData = z.infer<typeof createUserFormPersonalInfoSchema>
 export function FormDadosPessoais({ changeStep /* Descobrir como arrumar a Tipagem */ }) {
 
   async function createPersonalInfoUser(data: CreateUserData) {
-    let name = data.Name
-    let lastname = data.LastName
-    let cpf = '03832591850'
-    let birthday = data.DateBirth
-    let tel = data.CellPhone
-    // let cep= '05136350'
-    // let numberhouse= '25'
-    // let house= 'Casa'
-    // let reference= 'Casa'
-    // let addres= 'Rua Tal'
-    const axiosConfig = { headers: { 'content-type': 'application/json' } }
-    await api.post('/users/create/dados', { name, lastname, cpf, birthday, tel }, axiosConfig)
+
+    let inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+    { expires: inFifteenMinutes }
+    Cookies.set('name',data.Name,{ expires: inFifteenMinutes })
+    Cookies.set('lastname',data.LastName,{ expires: inFifteenMinutes })
+    Cookies.set('cpf',data.Cpf,{ expires: inFifteenMinutes })
+    Cookies.set('birthday',data.DateBirth,{ expires: inFifteenMinutes })
+    Cookies.set('tel',data.CellPhone,{ expires: inFifteenMinutes })
     return changeStep(2)
   }
 

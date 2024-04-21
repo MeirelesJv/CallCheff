@@ -6,13 +6,17 @@ import { useState } from "react"
 import { Form } from "../form/index"
 import { api } from "../../services"
 
+import Cookies from 'js-cookie'
+import { Navigate, useNavigate } from "react-router-dom"
+
+
 //Validação Formulário
 const createUserFormAdressInfoSchema = z.object({
   Adress: z.string().nonempty('Insira o endereço.'),
   CEP: z.string().nonempty('O CEP é obrigatório.'),
   Number: z.string().nonempty('O numero é obrigatório.'),
   Notes: z.string(),
-  Locale: z.enum(["Casa", "Apartamento"])
+  Locale: z.enum(["Casa", "Apartamento"]).nullable()
 })
 
 type CreateUserData = z.infer<typeof createUserFormAdressInfoSchema>
@@ -21,17 +25,27 @@ export function FormEndereco() {
 
 
   async function createAdressInfoUser(data: CreateUserData) {
+    console.log('chamou')
     const obj = {
+
+      email: Cookies.get('email'),
+      password: Cookies.get('password'),
+
+      name: Cookies.get('name'),
+      lastname: Cookies.get('lastname'),
+      cpf: Cookies.get('cpf'),
+      bithdaydate: Cookies.get('birthday'),
+      tel: Cookies.get('tel'),
+
       cep: data.CEP,
       numberhouse: data.Number,
-      house: "",
+      house: data.Locale,
       addres: data.Adress,
       reference: data.Notes,
     }
-
     const axiosConfig = { headers: { 'content-type': 'application/json' } }
     api.post('/users/create/dados', { obj }, axiosConfig)
-    return console.log("Enviou")
+    return console.log(obj)
   }
 
   const createUserAdressInfoForm = useForm<CreateUserData>({
@@ -65,7 +79,7 @@ export function FormEndereco() {
           <Form.Label>Tipo do Local</Form.Label>
           <Form.InputRadio name="Locale" option="Casa" />
           <Form.InputRadio name="Locale" option="Apartamento" />
-          <Form.ErrorMessage field="CustomLocale" />
+          <Form.ErrorMessage field="Locale" />
         </Form.Field>
         <Form.Field >
           <Form.Label>Número</Form.Label>

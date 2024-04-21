@@ -4,7 +4,8 @@ import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Title } from "../title/index"
 import { Form } from "../form/index"
-import { formToJSON } from "axios"
+import Cookies from 'js-cookie'
+
 
 
 //Validação Formulário
@@ -18,7 +19,6 @@ const createUserFormSchema = z.object({
 }).refine((data) => data.password === data.checkPassword, {
   message: "As senhas não coincidem.",
   path: ["checkPassword"],
-
 })
 
 type CreateUserData = z.infer<typeof createUserFormSchema>
@@ -27,11 +27,12 @@ export function FormEmail({ changeStep /* Descobrir como arrumar a Tipagem */ })
   const createUserForm = useForm<CreateUserData>({ resolver: zodResolver(createUserFormSchema) })
   const { handleSubmit, } = createUserForm;
 
+  
+
   async function createUserEmailForm(data: CreateUserData) {
-    const email = data.email
-    const password = data.password
-    const axiosConfig = { headers: { 'content-type': 'application/json' } }
-    api.post('/users/create/email', { email, password }, axiosConfig)
+    let inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+    Cookies.set('email', data.email, {expires: inFifteenMinutes})
+    Cookies.set('password', data.password,  {expires: inFifteenMinutes})
     return changeStep(1)
   }
 
