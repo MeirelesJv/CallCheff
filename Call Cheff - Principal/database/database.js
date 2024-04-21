@@ -1,8 +1,7 @@
 const sequelize = require("sequelize");
-const connection = new sequelize('CallCheff','goflash','b2u#123!',{
-    host: 'DESKTOP-T6H3BV3\\\SQLEXPRESS',
+const connection = new sequelize('CallCheff','teste','123',{
+    host: 'localhost',
     dialect: 'mssql',
-    port: 1433,
     timezone: '-03:00'
 });
 

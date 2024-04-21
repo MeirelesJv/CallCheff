@@ -8,10 +8,20 @@
 <body>  
 
     <div class="">
-        <form method="POST" action="/users/create/email">
+        <form method="POST" action="/users/create/dados">
         <input type="email" name="email" placeholder="Email">
         <input type="password" name="password" placeholder="Senha">
-        <button>Continuar</button>
+        <input type="text" name="name" placeholder="Primeiro Nome" required>
+        <input type="text" name="lastname" placeholder="Ultimo Nome" required>
+        <input type="number" name="cpf" placeholder="CPF" required>
+        <input type="date" name="birthday" placeholder="Aniversario" required>
+        <input type="number" name="cep" placeholder="cep" required>
+        <input type="number" name="numberhouse" placeholder="numero da casa" required>
+        <input type="text" name="house" placeholder="Casa/Apartamento" required>
+        <input type="text" name="reference" placeholder="Referencia">
+        <input type="number" name="tel" placeholder="Telefone" required>
+        <input type="text" name="addres" placeholder="Endereço" required>
+        <button>Cadastrar</button>
         </form>
     </div>
     
