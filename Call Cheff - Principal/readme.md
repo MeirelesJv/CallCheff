@@ -29,4 +29,5 @@ Site criado utilizando Node.js
 
 <ul>
 <li>API Distance Matrix => Serviço que aceita uma solicitação HTTPS contendo origens e destinos para um determinado meio de transporte. Para cada combinação de origem e destino, ela retorna a distância e a duração do percurso.</li>
+<li>ViaCep => Autocomplet do cadastro com a busca de cep via API</li>
 </ul>
