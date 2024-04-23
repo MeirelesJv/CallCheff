@@ -4,8 +4,7 @@ import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Title } from "../title/index"
 import { Form } from "../form/index"
-import { formToJSON } from "axios"
-
+import Cookies from 'js-cookie'
 
 //Validação Formulário
 const createUserFormSchema = z.object({
@@ -18,7 +17,6 @@ const createUserFormSchema = z.object({
 }).refine((data) => data.password === data.checkPassword, {
   message: "As senhas não coincidem.",
   path: ["checkPassword"],
-
 })
 
 type CreateUserData = z.infer<typeof createUserFormSchema>
@@ -27,11 +25,11 @@ export function FormEmail({ changeStep /* Descobrir como arrumar a Tipagem */ })
   const createUserForm = useForm<CreateUserData>({ resolver: zodResolver(createUserFormSchema) })
   const { handleSubmit, } = createUserForm;
 
+  //Função que enviar os dados para os cookies e avança para próxima pagina. 
   async function createUserEmailForm(data: CreateUserData) {
-    const email = data.email
-    const password = data.password
-    const axiosConfig = { headers: { 'content-type': 'application/json' } }
-    api.post('/users/create/email', { email, password }, axiosConfig)
+    let inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+    Cookies.set('email', data.email, { expires: inFifteenMinutes })
+    Cookies.set('password', data.password, { expires: inFifteenMinutes })
     return changeStep(1)
   }
 
@@ -44,7 +42,7 @@ export function FormEmail({ changeStep /* Descobrir como arrumar a Tipagem */ })
       </Title.TitleField>
       <form onSubmit={handleSubmit(createUserEmailForm)} className="flex flex-col gap-6">
         <Form.Field >
-          <span className="ml-6 ">Email</span>
+          <Form.Label>Email</Form.Label>
           <Form.Input type="email" name="email" placeholder="Insira seu email" />
           <Form.ErrorMessage field="email" />
         </Form.Field>
@@ -58,8 +56,8 @@ export function FormEmail({ changeStep /* Descobrir como arrumar a Tipagem */ })
           <Form.ErrorMessage field="password" />
           <Form.ErrorMessage field="checkPassword" />
         </Form.Field>
-        <button type="submit" className='text-center mt-6 py-2 px-6 rounded-full bg-dark-orange text-light-grey font-semibold'>Criar Conta</button>
-      </form>
+       <Form.Button type="submit" >Avançar</Form.Button>
+       </form>
     </FormProvider>
   )
 }
