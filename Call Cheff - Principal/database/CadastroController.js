@@ -7,7 +7,7 @@ const loginAuth = require('../middleware/loginAuth');
 const buscadorcep = require('buscadorcep');
 
 router.get("/cadastro",(req,res) =>{
-    res.render("validadorCep");
+    res.render("cadastro");
 })
 
 router.get("/",(req,res) => {
@@ -15,7 +15,7 @@ router.get("/",(req,res) => {
 })
 
 router.post("/users/create/dados",async (req,res) =>{
-    let { email, password,name, lastname, cpf, birthday, cep, numberhouse, house, reference, tel, addres,} = req.body
+    let { email, password, name, lastname, cpf, birthday, cep, rua, numberhouse, house, reference, bairro, cidade, uf, tel,} = req.body
 
     //Verifica que se nao tiver nada em Reference, ele coloque com null. Já instalado no Front-End
     // if (reference.trim() === '') {
@@ -40,11 +40,14 @@ router.post("/users/create/dados",async (req,res) =>{
                     Cpf: cpf,
                     Birthday: birthday,
                     Cep: cep,
+                    Rua: rua,
                     NumberHouse: numberhouse,
                     House: house,
                     Reference: reference,
-                    Tel: tel,
-                    Addres: addres
+                    Bairro: bairro,
+                    Cidade: cidade,
+                    Uf: uf,
+                    Tel: tel
                 });
                 
                 enviarEmail.sendMail({

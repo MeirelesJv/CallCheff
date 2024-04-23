@@ -1,29 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>  
+<html>
+    <head>
+    <title>Cadastro</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <div class="">
-        <form method="POST" action="/users/create/dados">
+    <!-- Adicionando Javascript -->
+    <script>
+    
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+    </script>
+    </head>
+
+    <body>
+      <form method="POST" action="/users/create/dados">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Senha" required>
         <input type="text" name="name" placeholder="Primeiro Nome" required>
         <input type="text" name="lastname" placeholder="Ultimo Nome" required>
         <input type="number" name="cpf" placeholder="CPF" required>
         <input type="date" name="birthday" placeholder="Aniversario" required>
-        <input type="number" name="cep" placeholder="cep" required>
+        <input type="text" name="cep" id="cep" value="" size="10" maxlength="9" onblur="pesquisacep(this.value);" placeholder="Cep" required>
+        <input type="text" name="rua" id="rua" size="60" placeholder="Rua" required>
         <input type="number" name="numberhouse" placeholder="numero da casa" required>
         <input type="text" name="house" placeholder="Casa/Apartamento" required>
         <input type="text" name="reference" placeholder="Referencia">
+        <input type="text" name="bairro" id="bairro" size="40" placeholder="Bairro" required>
+        <input type="text" name="cidade" id="cidade" size="40" placeholder="Cidade" required>
+        <input type="text" name="uf" id="uf" size="2" placeholder="Estado" required>
         <input type="number" name="tel" placeholder="Telefone" required>
-        <input type="text" name="addres" placeholder="Endereço" required>
         <button>Cadastrar</button>
         </form>
-    </div>
-    
-</body>
-</html>
+    </body>
+
+    </html>

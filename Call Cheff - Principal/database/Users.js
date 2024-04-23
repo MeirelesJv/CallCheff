@@ -30,6 +30,10 @@ const Users = connection.define('Users',{
         type: sequelize.INTEGER,
         allowNull: false
     },
+    Rua:{
+        type: sequelize.STRING,
+        allowNull: false
+    },
     NumberHouse:{
         type: sequelize.INTEGER,
         allowNull: false
@@ -43,14 +47,22 @@ const Users = connection.define('Users',{
         allowNull: true,
         defaultValue: null
     },
+    Bairro:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
+    Cidade:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
+    Uf:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
     Tel:{
         type: sequelize.BIGINT(11),
         allowNull: false
 
-    },
-    Addres:{
-        type: sequelize.STRING,
-        allowNull: false
     },
 })
 
