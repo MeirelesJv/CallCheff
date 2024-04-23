@@ -14,6 +14,9 @@ Site criado utilizando Node.js
 <li>Bcryptjs => Armazena senhas de forma segura.</li>
 <li>Nodemailer => Permite envio de E-mail com facilidade </li>
 <li>Cors => Permite o gerenciamento de urls acessíveis a API.</li>
+<li>Buscadorcep => Com o numero do Cep ele traz as informações do endereço</li>
+<li>Node-geocoder => Pega o nome da rua,numero,cidade e País e traz a Latitude e Longitude</li>
+<li>Geolib => Realiza pesquisas em raio utilizando latitude e longitude</li>
 </ul>
 
 <h3>FrameWorks Usados:</h3>

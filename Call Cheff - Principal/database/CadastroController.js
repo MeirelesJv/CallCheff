@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 const users = require("./Users");
 const bcrypt = require('bcryptjs');
-const enviarEmail = require('../email')
+const enviarEmail = require('../email');
+const loginAuth = require('../middleware/loginAuth');
+const buscadorcep = require('buscadorcep');
 
 router.get("/cadastro",(req,res) =>{
-    res.render("cadastro");
+    res.render("validadorCep");
 })
 
 router.get("/",(req,res) => {
@@ -15,10 +17,10 @@ router.get("/",(req,res) => {
 router.post("/users/create/dados",async (req,res) =>{
     let { email, password,name, lastname, cpf, birthday, cep, numberhouse, house, reference, tel, addres,} = req.body
 
-    //Verifica que se nao tiver nada em Reference, ele coloque com null.
-    if (reference.trim() === '') {
-        reference = null;
-    }
+    //Verifica que se nao tiver nada em Reference, ele coloque com null. Já instalado no Front-End
+    // if (reference.trim() === '') {
+    //     reference = null;
+    // }
 
     try {
         //Verificação de Email
@@ -70,6 +72,7 @@ router.post("/users/create/dados",async (req,res) =>{
 router.post("/users/login", (req,res) =>{
     let {email, password} = req.body;
     
+    
     users.findOne({where:{Email: email}}).then( user => {
         if(user != undefined){
             var correct = bcrypt.compareSync(password, user.Password);
@@ -78,7 +81,8 @@ router.post("/users/login", (req,res) =>{
                     id: user.id,
                     email: user.Email
                 }
-                res.json(req.session.user);
+                //res.json(req.session.user);
+                res.redirect("/home")
             }else{
                 res.redirect("/");
             }
@@ -87,5 +91,10 @@ router.post("/users/login", (req,res) =>{
         }
     })
 });
+
+router.get("/logout",(req,res) =>{
+    req.session.user = undefined;
+    res.redirect("/");
+})
 
 module.exports = router;

@@ -52,7 +52,6 @@ const Users = connection.define('Users',{
         type: sequelize.STRING,
         allowNull: false
     },
-    
 })
 
 Users.sync({force: false}).then(()=>{});
