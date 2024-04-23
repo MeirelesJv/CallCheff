@@ -36,10 +36,4 @@ router.post("/home/cep",(req,res) => {
     }).catch(error => console.error(error));
 });
 
-
-
-
-
-
-
 module.exports = router;

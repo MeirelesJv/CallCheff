@@ -17,7 +17,7 @@ app.use(session({
 }))
 
 // Linkando a categoria com o index
-const cadastroController = require("./database/CadastroController");
+const cadastroController = require("./controllers/CadastroController");
 const testeController = require("./controllers/TesteController");
 // Fazendo o sistema usar as rotas da const indicada | "/" é o prefixo que sera usando antes de qualquer outro da categoria 
 app.use("/",cadastroController,testeController);

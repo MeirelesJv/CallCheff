@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const users = require("./Users");
+const users = require("../database/Users");
+const usersChef = require("../database/usersChef");
+const chefCuisines = require("../database/chefsCuisines");
+const cuisines = require("../database/cuisines");
 const bcrypt = require('bcryptjs');
 const enviarEmail = require('../email');
 const loginAuth = require('../middleware/loginAuth');
-const buscadorcep = require('buscadorcep');
 
 router.get("/cadastro",(req,res) =>{
     res.render("cadastro");
@@ -98,6 +100,66 @@ router.post("/users/login", (req,res) =>{
 router.get("/logout",(req,res) =>{
     req.session.user = undefined;
     res.redirect("/");
-})
+});
+
+router.post("/cadastro/Chefs",(req,res) => {
+    req.render("cadastroChef")
+});
+
+router.post("/chefs/create/dados",async (req,res) =>{
+    let { email, password, name, lastname, cnpj, cep, rua, numberhouse, bairro, cidade, uf, tel,} = req.body
+
+    try{
+        let existingEmailChef = await usersChef.findOne({ where: {Email: email}});
+        if(existingEmailChef == undefined){
+            let existingEmail = await users.findOne({ where: {Email: email}});
+            if (existingEmail == undefined) {
+                //Verificação de CPF
+                let existingCnpj = await usersChef.findOne({where: {Cnpj: cnpj}});
+                if (existingCnpj == undefined) {
+                    const salt = bcrypt.genSaltSync(10);
+                    const hash = bcrypt.hashSync(password, salt);
+    
+                    await usersChef.create({
+                        Email: email,
+                        Password: hash,
+                        Name: name,
+                        LastName: lastname,
+                        Cnpj: cnpj,
+                        Cep: cep,
+                        Rua: rua,
+                        NumberHouse: numberhouse,
+                        Bairro: bairro,
+                        Cidade: cidade,
+                        Uf: uf,
+                        Tel: tel
+                    });
+                    
+                    enviarEmail.sendMail({
+                        from: "Joao Vitor <meirelesDev@hotmail.com>",
+                        to: email,
+                        subject: "Cadastro como Cheff em CallCheff",
+                        text: "Obrigado pelo cadastro seu otario",
+                    });
+    
+                    res.redirect('/'); //Sucesso
+                }else{
+                 res.redirect("/") //Cpf ja cadastrado
+                 console.log("Já existe o CPF")
+                }
+            }else{
+                res.redirect("/"); //Email ja cadastrado
+                console.log("Já existe o Email")
+            }
+        }else{
+            res.redirect("/")
+            console.log("Email já cadastrado")
+        }
+        
+    }catch(error){
+        console.error("Erro:", error);
+        res.status(500).send("Erro interno do servidor");
+    }
+});
 
 module.exports = router;
