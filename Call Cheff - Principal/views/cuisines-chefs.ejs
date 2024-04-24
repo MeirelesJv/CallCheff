@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vincular Culinaria no Chef</title>
+</head>
+<body>
+    <form method="POST" action="/cadastrar/cuisines-chefs/update">
+        <select name="usersChef">
+            <% usersChef.forEach((user) => { %>
+                <option value="<%= user.id %>"><%= user.Name %> <%= user.LastName %></option>                          
+            <% }) %>
+        </select>
+        <select name="cuisines">
+            <% cuisines.forEach((cuisines) => { %>
+                <option value="<%= cuisines.id %>"><%= cuisines.Name %></option>                          
+            <% }) %>
+        </select>
+        <input type="text" name="nivel" placeholder="Nivel" required>
+        <button>Atualizar</button>
+    </form>
+</body>
+</html>

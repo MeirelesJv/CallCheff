@@ -17,10 +17,16 @@ app.use(session({
 }))
 
 // Linkando a categoria com o index
-const cadastroController = require("./controllers/CadastroController");
+const cadastroController = require("./controllers/Cuisines/CuisinesController");
 const testeController = require("./controllers/TesteController");
+const chefsController = require("./controllers/Chefs/ChefsController")
+const usersController = require("./controllers/Users/UsersController")
 // Fazendo o sistema usar as rotas da const indicada | "/" é o prefixo que sera usando antes de qualquer outro da categoria 
-app.use("/",cadastroController,testeController);
+app.use("/",cadastroController,testeController,chefsController,usersController);
+
+app.get("/",(req,res) => {
+    res.render("login");
+})
 
 // View engine
 app.set('view engine','ejs');
