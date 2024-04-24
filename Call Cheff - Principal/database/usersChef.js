@@ -51,6 +51,14 @@ const usersChef = connection.define('usersChef',{
         allowNull: false
 
     },
+    Latitude:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
+    Longitude:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
 })
 
 usersChef.sync({force: false}).then(()=>{});

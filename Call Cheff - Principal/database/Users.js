@@ -64,6 +64,14 @@ const Users = connection.define('Users',{
         allowNull: false
 
     },
+    Latitude:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
+    Longitude:{
+        type: sequelize.STRING,
+        allowNull: false,
+    },
 })
 
 Users.sync({force: false}).then(()=>{});

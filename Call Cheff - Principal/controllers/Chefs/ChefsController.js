@@ -6,6 +6,7 @@ const chefCuisines = require("../../database/chefsCuisines");
 const cuisines = require("../../database/cuisines");
 const bcrypt = require('bcryptjs');
 const enviarEmail = require('../../email');
+const NodeGeocoder = require('node-geocoder');
 
 
 //Chefs
@@ -17,7 +18,29 @@ router.get("/cadastro/Chefs",(req,res) => {
 router.post("/chefs/create/dados",async (req,res) =>{
     let { email, password, name, lastname, cnpj, cep, rua, numberhouse, bairro, cidade, uf, tel,} = req.body
 
+     
+        // let numero = numberhouse;
+        // let logradouro = rua;
+        // let localidade = cidade;
+        
+      
+
     try{
+        const options = {
+            provider: 'openstreetmap' // provedor do serviço de geocodificação
+          };
+          const geocoder = NodeGeocoder(options);
+          // Endereço que deseja converter
+          const address = `${rua},`+ numberhouse +`,${cidade},Brasil`;
+          await geocoder.geocode(address).then( (response) => {
+            const [location] = response;  // Pegando o primeiro resultado
+            console.log(location.latitude, location.longitude);
+            req.session.latitude = location.latitude;
+            req.session.longitude = location.longitude;
+          }).catch( (error) => {
+              console.error(error);
+          });
+
         let existingEmailChef = await usersChef.findOne({ where: {Email: email}});
         if(existingEmailChef == undefined){
             let existingEmail = await users.findOne({ where: {Email: email}});
@@ -40,7 +63,9 @@ router.post("/chefs/create/dados",async (req,res) =>{
                         Bairro: bairro,
                         Cidade: cidade,
                         Uf: uf,
-                        Tel: tel
+                        Tel: tel,
+                        Longitude: req.session.longitude,
+                        Latitude: req.session.latitude,
                     });
                     
                     enviarEmail.sendMail({
