@@ -18,13 +18,6 @@ router.get("/cadastro/Chefs",(req,res) => {
 router.post("/chefs/create/dados",async (req,res) =>{
     let { email, password, name, lastname, cnpj, cep, rua, numberhouse, bairro, cidade, uf, tel,} = req.body
 
-     
-        // let numero = numberhouse;
-        // let logradouro = rua;
-        // let localidade = cidade;
-        
-      
-
     try{
         const options = {
             provider: 'openstreetmap' // provedor do serviço de geocodificação

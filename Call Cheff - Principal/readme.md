@@ -4,7 +4,6 @@ Site criado utilizando Node.js
 <h3>Bibliotecas Usadas:</h3>
 
 <ul>
-<li>Express => Lidar com Rotas HTTP.</li>
 <li>Express-session => Gerencia sessões de usuário em aplicativos web| Indicado apenas para pequena escala, pois as sessões ficam na Ram do Servidor.</li>
 <li>EJS => Permite incorporar código JavaScript em arquivos HTML.</li>
 <li>Body-parser => Ele extrai esses dados recebidos pelo POST e os torna acessíveis no objeto req.body.</li>
@@ -23,6 +22,7 @@ Site criado utilizando Node.js
 
 <ul>
 <li>Nodemon => Reinicia o servidor sempre que realizar alguma mudança no codigo.</li>
+<li>Express => Lidar com Rotas HTTP.</li>
 </ul>
 
 <h3>Apis Usadas:</h3>

@@ -52,8 +52,6 @@ router.get("/home/pesquisa",async(req,res) =>{
       }else{
         console.log("erro")
       }
-      console.log('Lojas no raio de 10 km do cliente:', lojasNoRaioDe10km);
-      
     });
     res.render("lojas",{lojasNoRaioDe10km: lojasNoRaioDe10km});
   }catch{
