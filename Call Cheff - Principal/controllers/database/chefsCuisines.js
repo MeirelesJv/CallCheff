@@ -10,7 +10,6 @@ const chefsCuisines = connection.define('chefsCuisines',{
     },
 })
 
-
 // belongsTo = Pertence a uma ... | Relacionamento 1 para 1.
 chefsCuisines.belongsTo(chefs, { foreignKey: 'chefId' });
 // belongsTo = Pertence a uma ... | Relacionamento 1 para 1.

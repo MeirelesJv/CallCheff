@@ -13,7 +13,7 @@ const NavBar = () => {
         </h1>
       </div>
       <div className='flex gap-4 items-center sm:visible invisible'>
-        <Link className='font-semibold text-dark-orange' to={'cadastro/'}>Criar Conta</Link>
+        <Link className='font-semibold text-dark-orange' to={'register/user/1'}>Criar Conta</Link>
         <button className='py-2 px-6  rounded-full bg-dark-orange text-light-grey font-semibold'>
           Entrar
         </button>
