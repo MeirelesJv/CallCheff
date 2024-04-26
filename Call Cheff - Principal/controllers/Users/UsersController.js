@@ -3,6 +3,7 @@ const router = express.Router();
 const users = require("../../database/Users");
 const bcrypt = require('bcryptjs');
 const enviarEmail = require('../../email');
+const NodeGeocoder = require('node-geocoder');
 
 //Users
 router.get("/cadastro",(req,res) =>{
@@ -19,6 +20,20 @@ router.post("/users/create/dados",async (req,res) =>{
     // }
 
     try {
+        const options = {
+            provider: 'openstreetmap' // provedor do serviço de geocodificação
+          };
+          const geocoder = NodeGeocoder(options);
+          // Endereço que deseja converter
+          const address = `${rua},`+ numberhouse +`,${cidade},Brasil`;
+          await geocoder.geocode(address).then( (response) => {
+            const [location] = response;  // Pegando o primeiro resultado
+            req.session.latitude = location.latitude;
+            req.session.longitude = location.longitude;
+          }).catch( (error) => {
+              console.error(error);
+          });
+
         //Verificação de Email
         let existingEmail = await users.findOne({ where: {Email: email}});
         if (existingEmail == undefined) {
@@ -43,7 +58,9 @@ router.post("/users/create/dados",async (req,res) =>{
                     Bairro: bairro,
                     Cidade: cidade,
                     Uf: uf,
-                    Tel: tel
+                    Tel: tel,
+                    Longitude: req.session.longitude,
+                    Latitude: req.session.latitude,
                 });
                 
                 enviarEmail.sendMail({
@@ -55,16 +72,14 @@ router.post("/users/create/dados",async (req,res) =>{
 
                 res.redirect('/'); //Sucesso
             }else{
-             res.redirect("/") //Cpf ja cadastrado
-             console.log("Já existe o CPF")
+                return res.status(400).json({message: "Já existe o CPF"});
             }
         }else{
-            res.redirect("/"); //Email ja cadastrado
-            console.log("Já existe o Email")
+            return res.status(400).json({message: "Email ja cadastrado"});
         }
-    }catch(error){
-        console.error("Erro:", error);
-        res.status(500).send("Erro interno do servidor");
+    }catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Registration failed' });
     }
 })
 
