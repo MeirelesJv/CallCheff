@@ -72,10 +72,10 @@ router.post("/users/create/dados",async (req,res) =>{
 
                 res.redirect('/'); //Sucesso
             }else{
-                res.status(500).send("Já existe o CPF");
+                return res.status(400).json({message: "Já existe o CPF"});
             }
         }else{
-            res.status(500).send("Email ja cadastrado");
+            return res.status(400).json({message: "Email ja cadastrado"});
         }
     }catch (error) {
         console.error(error);
